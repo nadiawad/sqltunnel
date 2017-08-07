@@ -25,13 +25,12 @@ Assuming you're already logged onto PWS, you can use the following instrcutions:
 ```
 git clone https://github.com/amcginlay/sqltunnel.git
 cd sqltunnel && cf push                # NOTE we're using a CF manifest file
-cf create-service cleardb spark mysql  # cleardb spark -> p-mysql 100mb on PCF
+cf create-service cleardb spark mysql  # replace "cleardb spark" with "p-mysql 100mb" when targeting PCF
 cf bind-service sqltunnel mysql
-cf apps                                # ... to identify the assigned route
-open https://[assigned-route] 
+cf env sqltunnel                       # NOTE the VCAP_SERVICES JSON object value
 ```
 
-The output will contain a transcript of the `VCAP_SERVICES` environment variable within which you can identify `cleardb` values `name`, `hostname`, `username` and `password`.  NOTE `name` indicates the identifier of the database Cloud Foundry generated for you.
+From the `VCAP_SERVICES` environment variable you can identify `cleardb` values for `name`, `hostname`, `username` and `password` within the JSON object.  NOTE `name` indicates the identifier of the database Cloud Foundry generated for you.
 
 Now we can use `cf ssh` to hijack (or leech off) the SQLTunnel app, thereby bridging the internal and external networks and exposing the MySQL service instance on a local port.
 
